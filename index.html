@@ -12,6 +12,11 @@
     color: #336699;
   }
   #wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  #status-row {
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -24,26 +29,46 @@
     display: inline-block;
     flex-shrink: 0;
   }
+  #spotify {
+    color: #336699;
+    display: none;
+    line-height: 1.4;
+  }
+  #spotify span {
+    color: #6799c5;
+  }
 </style>
 </head>
 <body>
 <div id="wrap">
-  <span id="dot"></span>
-  <span id="text">...</span>
+  <div id="status-row">
+    <span id="dot"></span>
+    <span id="text">...</span>
+  </div>
+  <div id="spotify"></div>
 </div>
 <script>
   fetch("https://api.lanyard.rest/v1/users/542890352303013898")
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      var status = d.data.discord_status;
+      var data = d.data;
       var dot = document.getElementById("dot");
       var text = document.getElementById("text");
-      if (status === "online" || status === "idle" || status === "dnd") {
+      var spotify = document.getElementById("spotify");
+
+      if (data.discord_status === "online" || data.discord_status === "idle" || data.discord_status === "dnd") {
         dot.style.background = "#6a994e";
         text.textContent = "online now";
       } else {
         dot.style.background = "#aaa";
         text.textContent = "offline";
+      }
+
+      if (data.listening_to_spotify && data.spotify) {
+        var song = data.spotify.song;
+        var artist = data.spotify.artist;
+        spotify.style.display = "block";
+        spotify.innerHTML = "listening to: <span>" + song + "</span> by " + artist;
       }
     })
     .catch(function() {
