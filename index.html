@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #336699;
+  }
+  #wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  #dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #aaa;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <span id="dot"></span>
+  <span id="text">...</span>
+</div>
+<script>
+  fetch("https://api.lanyard.rest/v1/users/542890352303013898")
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var status = d.data.discord_status;
+      var dot = document.getElementById("dot");
+      var text = document.getElementById("text");
+      if (status === "online" || status === "idle" || status === "dnd") {
+        dot.style.background = "#6a994e";
+        text.textContent = "online now";
+      } else {
+        dot.style.background = "#aaa";
+        text.textContent = "offline";
+      }
+    })
+    .catch(function() {
+      document.getElementById("text").textContent = "offline";
+    });
+</script>
+</body>
+</html>
